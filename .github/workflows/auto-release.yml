@@ -39,11 +39,6 @@ jobs:
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
           PRIVATE_KEY_PASSWORD: ${{ secrets.PRIVATE_KEY_PASSWORD }}
 
-      - name: Publish Plugin
-        run: ./gradlew publishPlugin --no-daemon --no-configuration-cache
-        env:
-          PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
-
       - name: Extract Version
         id: properties
         shell: bash
@@ -64,8 +59,13 @@ jobs:
             Automated release from the `main` branch.
             - **Commit**: ${{ github.sha }}
             - **Run Number**: ${{ github.run_number }}
-          files: build/distributions/*.zip
+          files: build/distributions/*-signed.zip
           draft: false
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.ACTION_TOKEN }}
+
+      - name: Publish Plugin
+        run: ./gradlew publishPlugin --no-daemon --no-configuration-cache
+        env:
+          PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
