@@ -7,6 +7,7 @@ on:
     paths-ignore:
       - '**.md'
       - '.github/workflows/**' # To prevent infinite loops if we only update the workflow itself
+  workflow_dispatch: # Allows manual triggering from the GitHub Actions tab
 
 jobs:
   build-and-release:
