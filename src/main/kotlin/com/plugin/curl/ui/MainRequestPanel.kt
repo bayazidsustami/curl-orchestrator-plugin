@@ -125,8 +125,16 @@ class MainRequestPanel(private val project: Project, private val toolWindow: Too
 
     // Response Data
     private var responseEditor: Editor? = null
-    private val responseHeadersArea = JBTextArea().apply { isEditable = false }
-    private val responseLogArea = JBTextArea().apply { isEditable = false }
+    private val responseHeadersArea = JBTextArea().apply { 
+        isEditable = false
+        lineWrap = true
+        wrapStyleWord = true
+    }
+    private val responseLogArea = JBTextArea().apply { 
+        isEditable = false
+        lineWrap = true
+        wrapStyleWord = true
+    }
     private val responseTabs = JTabbedPane()
     private val imageLabel = JLabel("", SwingConstants.CENTER)
     private var imageTabAdded = false
