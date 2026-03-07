@@ -19,6 +19,7 @@ dependencies {
         intellijIdeaCommunity("2024.1")
         bundledPlugins("com.intellij.java")
         instrumentationTools()
+        zipSigner()
     }
     implementation("com.google.code.gson:gson:2.10.1")
 }
@@ -28,6 +29,16 @@ kotlin {
 }
 
 tasks {
+    signPlugin {
+        certificateChain.set(providers.environmentVariable("CERTIFICATE_CHAIN"))
+        privateKey.set(providers.environmentVariable("PRIVATE_KEY"))
+        password.set(providers.environmentVariable("PRIVATE_KEY_PASSWORD"))
+    }
+
+    publishPlugin {
+        token.set(providers.environmentVariable("PUBLISH_TOKEN"))
+    }
+
     patchPluginXml {
         sinceBuild.set("232")
         untilBuild.set("252.*")
