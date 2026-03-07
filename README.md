@@ -16,9 +16,6 @@
 
 ### From IDE (Once published)
 
-<iframe width="384px" height="319px" src="https://plugins.jetbrains.com/embeddable/card/30541"></iframe>
-<iframe width="245px" height="48px" src="https://plugins.jetbrains.com/embeddable/install/30541"></iframe>
-
 1. Open IntelliJ IDEA or Android Studio.
 2. Go to **Preferences/Settings > Plugins > Marketplace**.
 3. Search for "Curl Orchestrator".
