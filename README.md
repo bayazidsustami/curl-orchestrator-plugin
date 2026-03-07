@@ -14,7 +14,7 @@
 
 ## 🛠️ Installation
 
-### From IDE (Once published)
+### From IDE 
 
 1. Open IntelliJ IDEA or Android Studio.
 2. Go to **Preferences/Settings > Plugins > Marketplace**.
