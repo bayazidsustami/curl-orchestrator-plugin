@@ -1,11 +1,11 @@
 plugins {
     id("java")
     kotlin("jvm") version "1.9.22"
-    id("org.jetbrains.intellij.platform") version "2.0.0"
+    id("org.jetbrains.intellij.platform") version "2.1.0"
 }
 
 group = "com.plugin.curl"
-version = "1.0.0"
+version = "1.0.1"
 
 repositories {
     mavenCentral()
@@ -40,7 +40,7 @@ tasks {
     }
 
     patchPluginXml {
-        sinceBuild.set("232")
-        untilBuild.set("252.*")
+        sinceBuild.set("241")
+        untilBuild.set("263.*")
     }
 }
