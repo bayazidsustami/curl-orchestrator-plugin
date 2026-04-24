@@ -590,20 +590,25 @@ class MainRequestPanel(private val project: Project, private val toolWindow: Too
         val headers = getHeadersFromTable()
         val formData = getFormDataFromTable()
         val body = requestBodyTextArea.text
-        
-        val request = CurlRequest(url, method, headers, formData, body)
-        val jsonString = GsonBuilder().setPrettyPrinting().create().toJson(request)
-        
+
         val descriptor = FileSaverDescriptor("Export Request", "Save Curl Request as JSON", "json")
         val dialog = FileChooserFactory.getInstance().createSaveFileDialog(descriptor, project)
-        val virtualFileWrapper = dialog.save(null as VirtualFile?, "request.json")
-        
+        val virtualFileWrapper = dialog.save(null as com.intellij.openapi.vfs.VirtualFile?, "request.json")
+
         virtualFileWrapper?.file?.let { file ->
-            try {
-                file.writeText(jsonString)
-                Messages.showInfoMessage("Request exported successfully!", "Export Success")
-            } catch (e: Exception) {
-                Messages.showErrorDialog("Failed to save file: ${e.message}", "Export Error")
+            val request = CurlRequest(url, method, headers, formData, body)
+            ApplicationManager.getApplication().executeOnPooledThread {
+                try {
+                    val jsonString = GsonBuilder().setPrettyPrinting().create().toJson(request)
+                    file.writeText(jsonString)
+                    ApplicationManager.getApplication().invokeLater {
+                        Messages.showInfoMessage("Request exported successfully!", "Export Success")
+                    }
+                } catch (e: Exception) {
+                    ApplicationManager.getApplication().invokeLater {
+                        Messages.showErrorDialog("Failed to save file: ${e.message}", "Export Error")
+                    }
+                }
             }
         }
     }
@@ -612,15 +617,21 @@ class MainRequestPanel(private val project: Project, private val toolWindow: Too
         val descriptor = FileChooserDescriptor(true, false, false, false, false, false)
             .withFileFilter { it.extension == "json" }
         descriptor.title = "Select Request JSON File"
-        
+
         FileChooser.chooseFile(descriptor, project, null) { file ->
-            try {
-                val jsonString = File(file.path).readText()
-                val type = object : TypeToken<CurlRequest>() {}.type
-                val request: CurlRequest = GsonBuilder().create().fromJson(jsonString, type)
-                parseRequestToUI(request)
-            } catch (e: Exception) {
-                Messages.showErrorDialog("Failed to load or parse JSON: ${e.message}", "Import Error")
+            ApplicationManager.getApplication().executeOnPooledThread {
+                try {
+                    val jsonString = java.io.File(file.path).readText()
+                    val type = object : TypeToken<CurlRequest>() {}.type
+                    val request: CurlRequest = GsonBuilder().create().fromJson(jsonString, type)
+                    ApplicationManager.getApplication().invokeLater {
+                        parseRequestToUI(request)
+                    }
+                } catch (e: Exception) {
+                    ApplicationManager.getApplication().invokeLater {
+                        Messages.showErrorDialog("Failed to load or parse JSON: ${e.message}", "Import Error")
+                    }
+                }
             }
         }
     }
@@ -629,13 +640,19 @@ class MainRequestPanel(private val project: Project, private val toolWindow: Too
         val raw = responseEditor?.document?.text ?: return
         if (raw.isBlank()) return
 
-        try {
-            val element = JsonParser.parseString(raw)
-            val gson = GsonBuilder().setPrettyPrinting().create()
-            val formatted = gson.toJson(element)
-            updateResponseText(formatted)
-        } catch (e: Exception) {
-            Messages.showInfoMessage("Response body is not valid JSON.", "Cannot Format")
+        ApplicationManager.getApplication().executeOnPooledThread {
+            try {
+                val element = JsonParser.parseString(raw)
+                val gson = GsonBuilder().setPrettyPrinting().create()
+                val formatted = gson.toJson(element)
+                ApplicationManager.getApplication().invokeLater {
+                    updateResponseText(formatted)
+                }
+            } catch (e: Exception) {
+                ApplicationManager.getApplication().invokeLater {
+                    Messages.showInfoMessage("Response body is not valid JSON.", "Cannot Format")
+                }
+            }
         }
     }
 
