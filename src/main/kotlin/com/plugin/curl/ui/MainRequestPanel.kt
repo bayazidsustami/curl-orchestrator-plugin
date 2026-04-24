@@ -579,8 +579,9 @@ class MainRequestPanel(private val project: Project, private val toolWindow: Too
     }
 
     private fun updateResponseText(text: String) {
+        val normalizedText = com.intellij.openapi.util.text.StringUtil.convertLineSeparators(text)
         ApplicationManager.getApplication().runWriteAction {
-            responseEditor?.document?.setText(text)
+            responseEditor?.document?.setText(normalizedText)
         }
     }
 

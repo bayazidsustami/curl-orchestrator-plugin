@@ -2,7 +2,7 @@
 <idea-plugin>
     <id>com.plugin.curl</id>
     <name>Curl Orchestrator</name>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <vendor email="support@bayazidsustami.com" url="https://www.bayazidsustami.com">Bayazid Sustami</vendor>
 
     <description><![CDATA[
