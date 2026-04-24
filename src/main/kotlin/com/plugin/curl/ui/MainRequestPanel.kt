@@ -594,7 +594,7 @@ class MainRequestPanel(private val project: Project, private val toolWindow: Too
         val request = CurlRequest(url, method, headers, formData, body)
         val jsonString = GsonBuilder().setPrettyPrinting().create().toJson(request)
         
-        val descriptor = FileSaverDescriptor("Export Request", "Save Curl Request as JSON", *arrayOf("json"))
+        val descriptor = FileSaverDescriptor("Export Request", "Save Curl Request as JSON", "json")
         val dialog = FileChooserFactory.getInstance().createSaveFileDialog(descriptor, project)
         val virtualFileWrapper = dialog.save(null as VirtualFile?, "request.json")
         
