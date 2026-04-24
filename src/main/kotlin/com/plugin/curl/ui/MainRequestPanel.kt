@@ -159,8 +159,7 @@ class MainRequestPanel(private val project: Project, private val toolWindow: Too
         val editorFactory = EditorFactory.getInstance()
         val document = editorFactory.createDocument("")
         val fileType = FileTypeManager.getInstance().getFileTypeByExtension("json")
-            ?: com.intellij.openapi.fileTypes.PlainTextFileType.INSTANCE
-        responseEditor = editorFactory.createViewer(document, project, com.intellij.openapi.editor.EditorKind.MAIN_EDITOR)
+        responseEditor = editorFactory.createEditor(document, project, fileType, true)
     }
 
     private fun setupUI() {
@@ -595,7 +594,7 @@ class MainRequestPanel(private val project: Project, private val toolWindow: Too
         val request = CurlRequest(url, method, headers, formData, body)
         val jsonString = GsonBuilder().setPrettyPrinting().create().toJson(request)
         
-        val descriptor = FileSaverDescriptor("Export Request", "Save Curl Request as JSON", "json")
+        val descriptor = FileSaverDescriptor("Export Request", "Save Curl Request as JSON", *arrayOf("json"))
         val dialog = FileChooserFactory.getInstance().createSaveFileDialog(descriptor, project)
         val virtualFileWrapper = dialog.save(null as VirtualFile?, "request.json")
         
